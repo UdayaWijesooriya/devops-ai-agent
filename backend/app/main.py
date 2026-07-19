@@ -1,27 +1,36 @@
 from app.tools.kubernetes_tool import KubernetesTool
+from app.analyzers.pod_health_analyzer import PodHealthAnalyzer
+
 
 def main():
 
     kubernetes_tool = KubernetesTool()
 
+    analyzer = PodHealthAnalyzer()
+
     pods = kubernetes_tool.get_pods(
         namespace="demo"
     )
 
-    for pod in pods:
+    report = analyzer.analyze(
+        pods
+    )
+
+    for report in report:
+
+        print("-------------------------------------")
 
         print(
-            f"Pod Name: {pod['name']}"
+            f"Application: {report['name']}"
         )
 
         print(
-            f"Pod Status: {pod['status']}"
+            f"Health: {report['health']}"
         )
 
         print(
-            f"Pod Node: {pod['node']}"
+            f"Reason: {report['reason']}"
         )
-
 
         print("-------------------------------------")
 
